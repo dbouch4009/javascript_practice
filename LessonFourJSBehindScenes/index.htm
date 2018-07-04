@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Section 3: JavaScript Behind the Scenes</title>
+        <script src="behindScenesScripts.js">
+    </script>
+    </head>
+
+    <body>
+        <h1>Section 3: JavaScript Behind the Scenes</h1>
+        <p>JavaScript runs <i>inside the browser</i></p>
+        <p>JavaScript engine inside the browser is what <i>executes</i> the code.</p>
+        <ul>
+            <li>Parser inspects syntax</li>
+            <li>Abstract Syntax Tree is converted to Machine Code</li>
+            <li>Code finally runs</li>
+            <li>Execution context is always Global Context, and stores variable values</li>
+            <li>Browser has a Window object</li>
+            <li>Executed functions get their own Execution Context in the top of the Stack.</li>
+            <li>Those executed functions that are nested, will increase the stack until they are finished, and its corresponding execution context gets popped.</li>
+            <li>Execution Context is an object, which contains Variable Object, Scopre Chain, and 'this' variable.</li>
+            <li>Functions and variables are 'Hoisted', meaning they are not available right away until they are hoisted.</li>
+            <li>Scope = where a certain variable/function can be accessed, and this is different because in JS scope is only dependent upon functions. Child functions have access to parent variables. ALL variables are stored in Scope Chain</li>
+            <li>'this' keyword - each Execution Context gets its own, which points to global object, i.e., the window. 'this' points to the object that is calling the method. Execution Context is only created once a function is invoked.</li>
+        </ul>
+    </body>    
+</html>
