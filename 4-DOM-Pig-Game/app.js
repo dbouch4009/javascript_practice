@@ -9,18 +9,12 @@ GAME RULES:
 
 */
 
-var scores, roundScore, activePlayer;
+var scores, roundScore, activePlayer, gameIsPlaying = true;
 
-scores = [0,0];
 //document.querySelector('#current-' + activePlayer).innerHTML = '<em>' + dice + '</em>';
-roundScore = 0;
-activePlayer = 0;
+init();
 
-document.getElementById('score-0').textContent = '0';
-document.getElementById('score-1').textContent = '0';
 
-document.getElementById('current-0').textContent = '0';
-document.getElementById('current-1').textContent = '0';
 
 //querySelector selects first element according to CSS attributes
 //innerHTML will allow passing HTML as strings, instead of just parsing JS into HTML
@@ -62,33 +56,62 @@ function checkForWin(){
         document.querySelector('.dice').style.display = 'none';
         document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
         document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
-        
+        gameIsPlaying = false;
     }
 }
 
 document.querySelector('.btn-roll').addEventListener('click',function(){
-    var dice = Math.floor(Math.random() * 6) + 1;    
-    var diceDOM = document.querySelector('.dice');
-    diceDOM.style.display = 'block';
-    diceDOM.src = 'dice-' + dice + '.png';    
-    console.log('score: ' + dice);
-    
-    //End turn if roll was a 1
-    if(dice > 1){
-        roundScore = roundScore + dice;
-        document.querySelector('#current-' + activePlayer).textContent = roundScore;
-    } else{
-        //Ternary Operator: same as a simple if-else statement. This is asking the activePlayer variable to change based on 'if' logic
-        nextPlayer();
+    if(gameIsPlaying){    
+        var dice = Math.floor(Math.random() * 6) + 1;    
+        var diceDOM = document.querySelector('.dice');
+        diceDOM.style.display = 'block';
+        diceDOM.src = 'dice-' + dice + '.png';    
+        console.log('score: ' + dice);
+        
+        //End turn if roll was a 1
+        if(dice > 1){
+            roundScore = roundScore + dice;
+            document.querySelector('#current-' + activePlayer).textContent = roundScore;
+        } else{
+            //Ternary Operator: same as a simple if-else statement. This is asking the activePlayer variable to change based on 'if' logic
+            nextPlayer();
+        }
     }
 });
 
 document.querySelector('.btn-hold').addEventListener('click',function(){
-    scores[activePlayer] += roundScore;
-    document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];    
-    checkForWin();
-    nextPlayer();    
+    if(gameIsPlaying){
+        scores[activePlayer] += roundScore;
+        document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];    
+        checkForWin();
+        nextPlayer();    
+    }
 });
 
+document.querySelector('.btn-new').addEventListener('click', init);  //putting the function call operator would cause it to be called immediately
 
+function init()
+{    
+    scores = [0,0];
+    activePlayer = 0;
+    roundScore = 0;
+    gameIsPlaying = true;
+
+    document.querySelector('.dice').style.display = 'none';
+
+    document.getElementById('score-0').textContent = '0';
+    document.getElementById('score-1').textContent = '0';
+
+    document.getElementById('current-0').textContent = '0';
+    document.getElementById('current-1').textContent = '0';
+
+    document.getElementById('name-0').textContent = 'Player 1';
+    document.getElementById('name-1').textContent = 'Player 2';
+
+    document.querySelector('.player-0-panel').classList.remove('winner');
+    document.querySelector('.player-1-panel').classList.remove('winner');
+    document.querySelector('.player-0-panel').classList.remove('active');
+    document.querySelector('.player-1-panel').classList.remove('active');
+    document.querySelector('.player-0-panel').classList.add('active');
+};
 
