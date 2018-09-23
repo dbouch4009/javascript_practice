@@ -156,3 +156,99 @@ questionThree('Mark');
 //passing arguments into anonymous functions
 interviewQuestion('teacher')('Abraham');
 
+// IIFE Immediately Invoked Function Expressions
+function game(){
+	var score = (Math.random() * 10);
+	console.log("First score is: " + score);
+}
+game();
+
+//same thing as an IIFE
+(function(name) {
+	var score = Math.random() * 10;
+	console.log("Seconed score is " + score + " for " + name);	
+})(personFour.name);
+
+//Putting it inside of parentheses tells JS that it is an expression, not a declaration
+// the following () immediately invokes the defined function
+
+// Closures!!
+function findRetirement(retirementAge){
+	var sentence = ' years left until retirement.';  //these out function properties remain in scope
+	return function(yearOfBirth){
+		var age = 2018 - yearOfBirth;
+		console.log((retirementAge - age) + sentence);
+	}
+}
+
+findRetirement(65)(1988);
+
+var retirementUS = findRetirement(70);  //using enclosures; the inner function variables miraculously remain
+retirementUS(1988);  //an inner function always has access to properties of its outer function
+
+var retirementMexico = findRetirement(100);
+retirementMexico(1988);
+
+var retirementGermany = findRetirement(80);
+retirementGermany(1988);
+
+function interviewQuestion(job){
+	var returnSentence = "";
+	var sentenceDesigner = "Can you explain UX?";
+	var sentenceTeacher = "What do you teach?";
+	var sentenceGeneric = "Hello, good to meet you.";
+
+	if(job === 'Designer'){
+		returnSentence = sentenceDesigner;
+	} else if(job === 'Teacher'){
+		returnSentence = sentenceTeacher;
+	} else{
+		returnSentence = sentenceGeneric;
+	}
+	return function(name){
+		console.log(name + ", " + returnSentence);
+	}
+}
+
+var interviewTeacher = interviewQuestion('Teacher');
+var interviewDesigner = interviewQuestion('Designer');
+var interviewGeneric = interviewQuestion('Electrician');
+
+interviewTeacher('Bobby Brown');
+interviewGeneric('Mark Sandusky');
+interviewDesigner('Ben Martin');
+
+//Bind, Call, and Apply
+var personSix = {
+	name: 'Paul',
+	age: 30,
+	job: 'technician',
+	presentation: function(style, timeOfDay){
+		if(style === 'formal'){
+			console.log('Good ' + timeOfDay + ' ladies and gentlemen. I am ' + this.name + ' and I am a ' + this.age + ' year old ' + this.job + '.');
+		} else if(style === 'friendly'){
+			console.log('Howdy! I am ' + this.name + ' and I am a ' + this.age + ' year old ' + this.job + '. Have a good ' + timeOfDay);
+		}
+	}
+}
+
+personSix.presentation('formal','morning');
+personSix.presentation('friendly','night');
+
+var personSeven = {
+	name: 'Emily',
+	age: 31,
+	job: 'instructor'
+};
+
+//Method Borrowing, applying method to a different object in which it is not defined. 'call' method
+personSix.presentation.call(personSeven, 'friendly','afternoon');  
+
+//apply passes in arrays
+//personSix.presentation.apply(personFive, ['friendly','afternoon']);  
+
+//bind generates a copy of the function
+var personFriendly = personSix.presentation.bind(personSix,'friendly');
+personFriendly('late night');  //bind reduces need for repetition
+personFriendly('early morning');
+
