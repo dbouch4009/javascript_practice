@@ -21,6 +21,8 @@ var EMPTY_BUDGET = {
         
         document.querySelector(DOM.container).addEventListener('click',ctrlDeleteItem);
         
+        document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changedType);
+        
 	}
 
 
@@ -34,6 +36,18 @@ var EMPTY_BUDGET = {
         //display budget
         UICtrl.displayBudget(budget);        
     }
+    
+    var updatePercentages = function(){
+        //calculate percentages
+        budgetCtrl.calculatePercentages();
+        
+        //read from budget controller
+        var percentages = budgetCtrl.getPercentages();
+        
+        //display to UI
+        UICtrl.displayPercentages(percentages);
+        
+    };
 
 	var ctrlAddItem = function(){
 		// TODO: Get field data, Add item to control, Add item to UI, calc budget, display budget		
@@ -46,7 +60,9 @@ var EMPTY_BUDGET = {
 		  UICtrl.clearFields();
         } else{
             console.log('Trouble with ' + input.value);
-        }      
+        }
+        
+        updatePercentages();
 	}
     
     var ctrlDeleteItem = function(event){  //event bubbling here to delete entire row, not just button
@@ -78,6 +94,7 @@ var EMPTY_BUDGET = {
 			console.log('Application has started');
 			setupEventListeners();
             UICtrl.displayBudget(EMPTY_BUDGET);
+            UIController.displayDate();
 		}
 	};	
 })(budgetController, UIController);

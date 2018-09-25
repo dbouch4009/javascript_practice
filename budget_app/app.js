@@ -5,7 +5,18 @@ var budgetController = (function() {
 		this.id = id;
 		this.description = desc;
 		this.value = val;
+        this.percentage = -1;
 	};
+    
+    Expense.prototype.calcPercentages = function(incomeInput){
+        if(incomeInput > 0){
+            this.percentage = Math.round((this.value / incomeInput) * 100);
+        }
+    };
+    
+    Expense.prototype.getPercentage = function(){
+        return this.percentage;
+    };
 
 	var Income = function(id,desc,val){
 	   this.id = id;
@@ -72,6 +83,19 @@ var budgetController = (function() {
             } else{
                 data.percentage = -1;
             }
+        },
+        
+        calculatePercentages: function(){
+            data.allItems.exp.forEach(function(cur){
+                cur.calcPercentages(data.allTotals.inc);
+            });
+        },
+        
+        getPercentages: function(){  //map returns values, foreach does not
+            var allPercentages = data.allItems.exp.map(function(cur){
+                return cur.getPercentage();
+            });
+            return allPercentages;
         },
         
         getBudget: function(){
