@@ -1,0 +1,15 @@
+{
+  "name": "forkify",
+  "version": "1.0.0",
+  "description": "js practice cooking app",
+  "main": "modern.js",
+  "scripts": {
+    "dev": "webpack"
+  },
+  "author": "Damian Bouch",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^4.19.0"
+  },
+  "dependencies": {}
+}
