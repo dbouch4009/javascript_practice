@@ -418,25 +418,82 @@ for(let [key,value] of question.entries()){ //accessing both key and value
     }
 }
 
-const myAnswer = parseInt(prompt('Write correct answer'));
+//const myAnswer = parseInt(prompt('Write correct answer'));
 
-console.log(question.get(myAnswer === question.get('correct')));
+//console.log(question.get(myAnswer === question.get('correct')));
 
 
 //Classes
+//Syntatic sugar instead of prototype inheritance
+
+var personNovember = function(name,yearOfBirth,job){
+    this.name = name;
+    this.yearOfBirth = yearOfBirth;
+    this.job = job;
+}
+
+personNovember.prototype.calculateAge = function(){
+    
+    var now = new Date().getFullYear();
+    var age = (now - this.yearOfBirth);
+    console.log(now);
+    console.log(age);
+}
+
+var MarkB = new personNovember('Mark',1983,'painter');
+
+//same thing as a class
+class personClass {
+    constructor(name,yearOfBirth,job){
+        this.name = name;
+        this.yearOfBirth = yearOfBirth;
+        this.job = job;
+    }
+    calculateAge(){
+        var age = parseInt(new Date().getFullYear()) - this.yearOfBirth;
+        console.log(age);
+    }
+}
+
+var steveL = new personClass('Steve',1955,'IT guy');
+
+console.log(MarkB.yearOfBirth);
+console.log(steveL.yearOfBirth);
+
+MarkB.calculateAge();
+steveL.calculateAge();
+
+//ES6 class and subclass inherited class
+class Person6{
+    constructor(name,yearOfBirth,job){
+        this.name=name;
+        this.yearOfBirth = yearOfBirth;
+        this.job = job;
+    }
+    calculateAge(){
+        var age = new Date().getFullYear() - this.yearOfBirth;
+        console.log(age);
+    }
+}
+
+class Athlete6 extends Person6{
+    constructor(name,yearOfBirth,job,olympicGames,medals){
+            super(name,yearOfBirth,job);
+            this.olympicGames = olympicGames;
+            this.medals = medals;
+        }
+            wonMedal(){
+                this.medals++;
+                console.log(this.medals);
+            }
+        }
+    
 
 
+const johnAthlete6 = new Athlete6('John Brown',1990,'swimmer',3,10);
 
-
-
-
-
-
-
-
-
-
-
+johnAthlete6.wonMedal();
+johnAthlete6.calculateAge();
 
 
 
