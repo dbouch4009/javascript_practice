@@ -9,8 +9,7 @@ export const renderResults = recipes => {
         recipes.forEach(renderRecipe);                
     } catch(error){
         console.log(error);
-    }
-    
+    }    
 }
 
 const renderRecipe = recipe => {
@@ -21,11 +20,33 @@ const renderRecipe = recipe => {
                 <img src="${recipe.image_url}" alt=${recipe.title}>
             </figure>
             <div class="results__data">
-                <h4 class="results__name">${recipe.title}</h4>
+                <h4 class="results__name">${limitRecipeTitle(recipe.title)}</h4>
                 <p class="results__author">${recipe.publisher}</p>
             </div>
         </a>
     </li>
     `;
     elements.searchResultList.insertAdjacentHTML('beforeend',markup);
+}
+
+export const clearInput = () =>{ 
+    elements.searchInput.value = '';
+};
+
+export const clearResults = () =>{
+    elements.searchResultList.innerHTML = '';
+};
+
+const limitRecipeTitle = (title, limit = 17) =>{
+    const newTitle = [];  //it is OK to use const if changing arrays
+    if(title.length > limit){
+        title.split(' ').reduce((acc,cur) =>{
+            if(acc + cur.length <= limit){
+                newTitle.push(cur);
+            }
+            return acc + cur.length;            
+        }, 0);
+        return `${newTitle.join(' ')}...`;  //join method joins array elements
+    }
+    return title;
 }

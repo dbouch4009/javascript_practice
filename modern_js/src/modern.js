@@ -7,7 +7,7 @@ import {add as pseudoAdd,multiply, ID} from './views/searchView';
 import 'babel-polyfill';
 import Search from './models/Search';
 import { ECANCELED } from 'constants';
-import {elements} from './views/base';
+import {elements, renderLoader,clearLoader,elementStrings} from './views/base';
 import * as searchView from './views/searchView';
 
 /*global state of the app
@@ -28,11 +28,15 @@ const controlSearch = async () =>{
         state.search = new Search(query);
 
         // prepare ui for results
+        searchView.clearInput();
+        searchView.clearResults();
+        renderLoader(elements.searchRes);
 
         // search for recipes
         await state.search.getResults();
 
         // render results on UI
+        clearLoader();
         searchView.renderResults(state.search.recipes);
         //console.log('Rendered recipes: ' + state.search);
     }
