@@ -18,9 +18,12 @@ export default class Search{
                                //'https://food2fork.com/api/search?key=7992eacfddf404bb6fea2732066a9694&q=pizza'
             //let noCorsFullSearch = `${food2fork}?key=${key}&q=${this.query}`;
             let noCorsBuiltSearch = food2fork + '?key=' + key + '&q=' + this.query;
-            console.log('Looking for recipes...' + noCorsBuiltSearch);
-            const result = await axios(noCorsBuiltSearch);
-            this.recipes = result.data.recipes;
+            //console.log('Looking for recipes...' + noCorsBuiltSearch);
+            const results = await axios(noCorsBuiltSearch);
+            this.recipes = results.data.recipes;
+            //this.recipes = result.data.recipes;
+            // console.log(result);
+            // console.log(this.recipes);
             
             // const result = await axios.get("https://bypasscors.herokuapp.com/api/?url=https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com", {
             //                 headers: {
@@ -30,7 +33,7 @@ export default class Search{
             // });
             //const recipes = result.data.recipes;
             //console.log(recipes);
-            console.log(this.recipes);
+            //console.log(this.recipes);
         }catch(error){
             alert(error);
         }
