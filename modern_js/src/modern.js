@@ -47,3 +47,13 @@ elements.searchForm.addEventListener('submit', e =>{
     controlSearch();
 });
 
+//event delegation
+elements.searchResPages.addEventListener('click',e =>{
+    const btn = e.target.closest('.btn-inline');  //click on closest element containing this class
+    if(btn){
+        const goToPage = parseInt(btn.dataset.goto,10);
+        searchView.clearResults();
+        searchView.renderResults(state.search.recipes, goToPage);
+        console.log(goToPage);
+    }
+});

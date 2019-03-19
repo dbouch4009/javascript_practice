@@ -3,14 +3,49 @@ import {elements} from './base';
 
 export const getInput = () => elements.searchInput.value;
 
-export const renderResults = recipes => {
+const createButton = (page,type) =>  //type is prev or next
+    `
+    <button class="btn-inline results__btn--${type}" data-goto=${type === 'prev' ? page - 1 : page + 1}>
+        <span>Page ${type === 'prev' ? page - 1 : page + 1}</span>    
+        <svg class="search__icon">
+            <use href="img/icons.svg#icon-triangle-${type === 'prev' ? 'left': 'right'}"></use>
+        </svg>
+    </button>
+    `;
+
+const renderButtons = (page,numResults,resPerPage) =>{
+    let pageCount = Math.ceil(numResults / resPerPage);
+    let button;
+    if(page === 1 && pageCount > 1){
+        //button goes to next page
+        button = createButton(page,'next');
+    } else if(page === pageCount && pageCount > 1){
+        // only prev button
+        button = createButton(page,'prev');
+    } else if(page < pageCount){
+        // both buttons
+        button = `
+            ${createButton(page,'prev')}
+            ${createButton(page,'next')}
+        `;
+    }
+    elements.searchResPages.insertAdjacentHTML('afterbegin',button);
+};
+
+export const renderResults = (recipes,page=1,resPerPage=9) => {
+    //render results of current page
     try{
-        console.log(recipes);
-        recipes.forEach(renderRecipe);                
+        const start = (page - 1) * resPerPage;
+        const end = page * resPerPage;
+
+        recipes.slice(start,end).forEach(renderRecipe);                
     } catch(error){
         console.log(error);
     }    
-}
+
+    //render pagination buttons
+    renderButtons(page, recipes.length, resPerPage);
+};
 
 const renderRecipe = recipe => {
     const markup = `
@@ -27,7 +62,7 @@ const renderRecipe = recipe => {
     </li>
     `;
     elements.searchResultList.insertAdjacentHTML('beforeend',markup);
-}
+};
 
 export const clearInput = () =>{ 
     elements.searchInput.value = '';
@@ -35,6 +70,7 @@ export const clearInput = () =>{
 
 export const clearResults = () =>{
     elements.searchResultList.innerHTML = '';
+    elements.searchResPages.innerHTML = '';
 };
 
 const limitRecipeTitle = (title, limit = 17) =>{
