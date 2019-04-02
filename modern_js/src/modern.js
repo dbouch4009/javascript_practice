@@ -6,9 +6,9 @@ import stringSample from './models/Search';
 import {add as pseudoAdd,multiply, ID} from './views/searchView';
 import 'babel-polyfill';
 import Search from './models/Search';
-import { ECANCELED } from 'constants';
 import {elements, renderLoader,clearLoader,elementStrings} from './views/base';
 import * as searchView from './views/searchView';
+import Recipe from './models/Recipe';
 
 /*global state of the app
 - search object
@@ -18,6 +18,40 @@ import * as searchView from './views/searchView';
 */
 const state = {};
 
+//Recipe Controller
+const controlRecipe = async () => {
+    //Get ID from URL
+    const id = window.location.hash.replace('#','');
+    //console.log(id);
+
+    if(id){
+        //Prepare UI for changes
+
+
+        //create new recipe object
+        state.recipe = new Recipe(id);
+
+        //Get recipe data
+        try{
+            await state.recipe.getRecipe();  //because is async method
+
+            //Calc servings and time
+            state.recipe.calcServings();
+            state.recipe.calcTime();
+    
+            //Render recipe
+            console.log(state.recipe);
+        }catch(err){
+            alert('Error processing recipe');
+        }
+
+    }
+}
+
+window.addEventListener('hashchange',controlRecipe);
+window.addEventListener('load',controlRecipe);
+
+//Search Controller
 const controlSearch = async () =>{
     // get query from view
     const query = searchView.getInput();
@@ -32,13 +66,19 @@ const controlSearch = async () =>{
         searchView.clearResults();
         renderLoader(elements.searchRes);
 
-        // search for recipes
-        await state.search.getResults();
+        try{
+            await state.search.getResults();
 
-        // render results on UI
-        clearLoader();
-        searchView.renderResults(state.search.recipes);
-        //console.log('Rendered recipes: ' + state.search);
+            // render results on UI
+            clearLoader();
+            searchView.renderResults(state.search.recipes);
+            //console.log('Rendered recipes: ' + state.search);
+        }catch(err){
+            alert(err);
+            clearLoader();
+        }
+        // search for recipes
+
     }
 }
 
@@ -54,6 +94,5 @@ elements.searchResPages.addEventListener('click',e =>{
         const goToPage = parseInt(btn.dataset.goto,10);
         searchView.clearResults();
         searchView.renderResults(state.search.recipes, goToPage);
-        console.log(goToPage);
     }
 });
