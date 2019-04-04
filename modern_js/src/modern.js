@@ -8,6 +8,7 @@ import 'babel-polyfill';
 import Search from './models/Search';
 import {elements, renderLoader,clearLoader,elementStrings} from './views/base';
 import * as searchView from './views/searchView';
+import * as recipeView from './views/recipeView';
 import Recipe from './models/Recipe';
 
 /*global state of the app
@@ -31,9 +32,13 @@ const controlRecipe = async () => {
         //create new recipe object
         state.recipe = new Recipe(id);
 
+        //testing purposes
+        window.r = state.recipe;
+        //end testing purposes
         //Get recipe data
         try{
             await state.recipe.getRecipe();  //because is async method
+            state.recipe.parseIngredients();
 
             //Calc servings and time
             state.recipe.calcServings();
