@@ -27,7 +27,14 @@ const controlRecipe = async () => {
 
     if(id){
         //Prepare UI for changes
+        recipeView.clearRecipe();
+        renderLoader(elements.recipe);
 
+        //Highlight selected search item
+        if(state.search){
+            console.log(state.search);
+            searchView.highlightSelected(id);        
+        } 
 
         //create new recipe object
         state.recipe = new Recipe(id);
@@ -45,7 +52,9 @@ const controlRecipe = async () => {
             state.recipe.calcTime();
     
             //Render recipe
-            console.log(state.recipe);
+            clearLoader();
+            recipeView.renderRecipe(state.recipe);
+
         }catch(err){
             alert('Error processing recipe');
         }
@@ -53,8 +62,24 @@ const controlRecipe = async () => {
     }
 }
 
+//event handling
 window.addEventListener('hashchange',controlRecipe);
 window.addEventListener('load',controlRecipe);
+elements.recipe.addEventListener('click',e => {
+    //does clicked element contain these classes??
+    if(e.target.matches('.btn-decrease, .btn-decrease *')){
+        //decrease button is clicked
+        if(state.recipe.servings > 1){
+            state.recipe.updateServings('dec');
+            recipeView.updateServingsIngredients(state.recipe);
+        }        
+    } else if(e.target.matches('.btn-increase, .btn-increase *')){
+        //increase button is clicked
+        state.recipe.updateServings('inc');
+        recipeView.updateServingsIngredients(state.recipe);
+    }
+    console.log(state.recipe);
+});
 
 //Search Controller
 const controlSearch = async () =>{

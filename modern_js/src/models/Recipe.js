@@ -12,9 +12,8 @@ export default class Recipe{
             const result = await axios(url);
             this.title = result.data.recipe.title;
             this.author = result.data.recipe.publisher;
-            this.img = result.data.recipe.img_url;
+            this.img = result.data.recipe.image_url;
             this.url = result.data.recipe.source_url;
-            this.img = result.data.recipe.img_url;
             this.ingredients = result.data.recipe.ingredients;
         }catch(error){
             console.log(error);
@@ -33,7 +32,8 @@ export default class Recipe{
 
     parseIngredients(){
         const unitsLong = ['tablespoons','tablespoon','ounces','ounce','teaspoons','teaspoon','cups','cup','pounds','quarts'];
-        const unitsShort = ['tbsp','tbsp','oz','oz','tsp','tsp','cup','cup','pound','quart']
+        const unitsShort = ['tbsp','tbsp','oz','oz','tsp','tsp','cup','cup','pound','quart'];
+        const units = [... unitsShort, 'kg','g'];  //ES6 destructuring here
         const newIngredients = this.ingredients.map(el => {
             // Uniform units
             let ingredient = el.toLowerCase();
@@ -46,7 +46,7 @@ export default class Recipe{
 
             //Parse ingredients into count, unit and ingredient
             const arrIngredient = ingredient.split(' ');
-            const unitIndex = arrIngredient.findIndex(el2 => unitsShort.includes(el2));
+            const unitIndex = arrIngredient.findIndex(el2 => units.includes(el2));
 
             let objIngredient;
             if(unitIndex > -1){
@@ -86,5 +86,18 @@ export default class Recipe{
             return objIngredient;
         });
         this.ingredients = newIngredients;
+    }
+
+    updateServings (type){
+        // servings
+        const newServings = type === 'dec' ? this.servings -1 : this.servings + 1;
+
+
+        // ingredients
+        this.ingredients.forEach(ing => {
+            ing.count = ing.count * (newServings / this.servings);
+        });
+        
+        this.servings = newServings;
     }
 }
