@@ -20,6 +20,7 @@ import List from './models/List';
 - liked recipes
 */
 const state = {};
+window.state = state;  //available in window for testing
 
 //List Controller
 
@@ -76,11 +77,29 @@ const controlList = () =>{
     //add each ingredient to list and UI
     state.recipe.ingredients.forEach(el => {
         const item = state.list.addItem(el.count, el.unit, el.ingredient);
-        console.log(item);
-        console.log(state);
+        //console.log(item);
+        //console.log(state);
         listView.renderItem(item);
     });
 };
+
+//handle delete and update list item events
+elements.shopping.addEventListener('click',e => {
+    const id = e.target.closest('.shopping__item').dataset.itemid;
+
+    if(e.target.matches('.shopping__delete, .shopping__delete *')){  //second attribute includes child elements
+        //delete from state
+        state.list.deleteItem(id);
+
+        //delete from UI
+        listView.deleteItem(id);
+
+        //handle count update
+    } else if(e.target.matches('.shopping__count-value')){
+        const val = parseFloat(e.target.value, 10);
+        state.list.updateCount(id, val);
+    }
+});
 
 
 //event handling
