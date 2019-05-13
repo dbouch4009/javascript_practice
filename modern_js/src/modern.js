@@ -12,6 +12,7 @@ import * as recipeView from './views/recipeView';
 import * as listView from './views/listView';
 import Recipe from './models/Recipe';
 import List from './models/List';
+import Likes from './models/Likes';
 
 /*global state of the app
 - search object
@@ -38,7 +39,7 @@ const controlRecipe = async () => {
 
         //Highlight selected search item
         if(state.search){
-            console.log(state.search);
+            //console.log(state.search);
             searchView.highlightSelected(id);        
         } 
 
@@ -101,6 +102,42 @@ elements.shopping.addEventListener('click',e => {
     }
 });
 
+//Likes Controller
+
+const controlLike = () =>{
+    //console.log(state);
+    if(!state.likes){
+        //console.log("Created new Likes");
+        state.likes = new Likes();
+    }
+
+    const currentId = state.recipe.id;
+
+    //user HAS NOT yet liked current recipe
+    if(!state.likes.isLiked(currentId)){
+        //add like to state
+        console.log("recipe is not liked: " + currentId);
+        const newLike = state.likes.addLike(currentId, state.recipe.title, state.recipe.author, state.recipe.img);
+
+        //toggle like button
+
+
+        //add like to UI list
+        
+        //console.log(state.likes);
+
+    //user HAS liked the current recipe
+    } else {
+        //remove like from state
+        state.likes.deleteLike(currentId);
+
+        //toggle liek button
+
+        //remove like from UI list
+        //console.log(state.likes);
+
+    }
+};
 
 //event handling
 window.addEventListener('hashchange',controlRecipe);
@@ -118,9 +155,12 @@ elements.recipe.addEventListener('click',e => {
         state.recipe.updateServings('inc');
         recipeView.updateServingsIngredients(state.recipe);
     } else if(e.target.matches('.recipe__btn--add, .recipe__btn--add *')){
+        //add ingredients ot shopping list
         controlList();
+    } else if(e.target.matches('.recipe__love, .recipe__love *')){
+        //call like controller
+        controlLike();
     }
-    //console.log(state.recipe);
 });
 
 //Search Controller
